@@ -53,6 +53,6 @@
   <node name="stretch_controller_spawner" pkg="controller_manager" type="spawner"
         args="stretch_diff_drive_controller stretch_controller_raw"/>
 
-  <node name="publish_ground_truth_odom" pkg="stretch_gazebo" type="publish_ground_truth_odom.py" output="screen"/>
+  <node name="unpause_after_wait" pkg="stretch_gazebo" type="unpause_after_wait" output="screen"/>
 
 </launch>
