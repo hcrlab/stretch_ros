@@ -1,9 +1,9 @@
-from numba import njit
 import numpy as np
+from numba import njit
+
 
 @njit(fastmath=True)
 def numba_create_plane_image(plane_parameters, image):
-
     image_height, image_width = image.shape
     alpha, beta, gamma = plane_parameters
 
@@ -11,16 +11,16 @@ def numba_create_plane_image(plane_parameters, image):
         for x in range(image_width):
             image[y, x] = (alpha * x) + (beta * y) + gamma
 
-            
+
 @njit(fastmath=True)
 def transform_original_to_corrected(plane_parameters, new_plane_height):
-    # This does not account for clipping    
+    # This does not account for clipping
     alpha, beta, gamma = plane_parameters
-    
-    transform = np.array([[1.0,      0.0, 0.0, 0.0],
-                          [0.0,      1.0, 0.0, 0.0],
+
+    transform = np.array([[1.0, 0.0, 0.0, 0.0],
+                          [0.0, 1.0, 0.0, 0.0],
                           [-alpha, -beta, 1.0, new_plane_height - gamma],
-                          [0.0,      0.0, 0.0, 1.0]])
+                          [0.0, 0.0, 0.0, 1.0]])
     return transform
 
 
@@ -28,6 +28,7 @@ def transform_original_to_corrected(plane_parameters, new_plane_height):
 def transform_corrected_to_original(plane_parameters, new_plane_height):
     transform = transform_original_to_corrected(plane_parameters, new_plane_height)
     return np.linalg.inv(transform)
+
 
 @njit(fastmath=True)
 def numba_correct_height_image(plane_parameters, height_image, new_plane_height):
@@ -39,15 +40,15 @@ def numba_correct_height_image(plane_parameters, height_image, new_plane_height)
     # close to constant height).
 
     # Currently, this assumes that the height image has type uint8
-    
+
     new_height_image = np.zeros_like(height_image)
-    
+
     image_height, image_width = height_image.shape
     alpha, beta, gamma = plane_parameters
 
     for y in range(image_height):
         for x in range(image_width):
-            height = height_image[y,x]
+            height = height_image[y, x]
             if height != 0:
                 plane_z = (alpha * x) + (beta * y) + gamma
                 new_height = (height - plane_z) + new_plane_height
@@ -69,8 +70,8 @@ def numba_correct_height_image(plane_parameters, height_image, new_plane_height)
                     new_height = 255
 
                 # This should cast the value to a uint8
-                new_height_image[y,x] = new_height
+                new_height_image[y, x] = new_height
 
     transform = transform_original_to_corrected(plane_parameters, new_plane_height)
-    
+
     return new_height_image, transform

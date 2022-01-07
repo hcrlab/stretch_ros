@@ -1,6 +1,6 @@
+import numpy as np
 from numba import jit, njit
 
-import numpy as np
 
 @njit(fastmath=True)
 def numba_sample_ridge(window_width, ridge_mask, distance_map, distance_threshold):
@@ -24,10 +24,10 @@ def numba_sample_ridge(window_width, ridge_mask, distance_map, distance_threshol
             while w_y < window_width:
                 y = l_y + w_y
                 w_x = 0
-                while w_x < window_width: 
+                while w_x < window_width:
                     x = l_x + w_x
-                    if ridge_mask[y,x] > 0:
-                        value = distance_map[y,x]
+                    if ridge_mask[y, x] > 0:
+                        value = distance_map[y, x]
                         if (value > distance_threshold) and (value > max_value):
                             max_found = True
                             max_value = value
@@ -40,9 +40,9 @@ def numba_sample_ridge(window_width, ridge_mask, distance_map, distance_threshol
             l_x += window_width
         l_y += window_width
 
-    l_y = window_width//2
+    l_y = window_width // 2
     while l_y < l_y_max:
-        l_x = window_width//2
+        l_x = window_width // 2
         while l_x < l_x_max:
             max_found = False
             max_value = 0
@@ -52,11 +52,11 @@ def numba_sample_ridge(window_width, ridge_mask, distance_map, distance_threshol
             while w_y < window_width:
                 y = l_y + w_y
                 w_x = 0
-                while w_x < window_width: 
+                while w_x < window_width:
                     x = l_x + w_x
-                    if sample_map[y,x] > 0:
-                        sample_map[y,x] = 0
-                        value = distance_map[y,x]
+                    if sample_map[y, x] > 0:
+                        sample_map[y, x] = 0
+                        value = distance_map[y, x]
                         if value > max_value:
                             max_found = True
                             max_value = value
@@ -72,13 +72,12 @@ def numba_sample_ridge(window_width, ridge_mask, distance_map, distance_threshol
     return sample_map
 
 
-
 @njit(fastmath=True)
 def numba_sample_ridge_list(window_width, ridge_mask, distance_map, distance_threshold):
     # Currently, this does not properly handle the borders of the
     # image (i.e., <= window_width of the image edges.
     h, w = ridge_mask.shape
-    
+
     sample_map = np.zeros_like(ridge_mask, np.uint8)
 
     l_y_max = h - window_width
@@ -95,10 +94,10 @@ def numba_sample_ridge_list(window_width, ridge_mask, distance_map, distance_thr
             while w_y < window_width:
                 y = l_y + w_y
                 w_x = 0
-                while w_x < window_width: 
+                while w_x < window_width:
                     x = l_x + w_x
-                    if ridge_mask[y,x] > 0:
-                        value = distance_map[y,x]
+                    if ridge_mask[y, x] > 0:
+                        value = distance_map[y, x]
                         if (value > distance_threshold) and (value > max_value):
                             max_found = True
                             max_value = value
@@ -112,10 +111,10 @@ def numba_sample_ridge_list(window_width, ridge_mask, distance_map, distance_thr
         l_y += window_width
 
     sample_list = []
-    
-    l_y = window_width//2
+
+    l_y = window_width // 2
     while l_y < l_y_max:
-        l_x = window_width//2
+        l_x = window_width // 2
         while l_x < l_x_max:
             max_found = False
             max_value = 0
@@ -125,10 +124,10 @@ def numba_sample_ridge_list(window_width, ridge_mask, distance_map, distance_thr
             while w_y < window_width:
                 y = l_y + w_y
                 w_x = 0
-                while w_x < window_width: 
+                while w_x < window_width:
                     x = l_x + w_x
-                    if sample_map[y,x] > 0:
-                        value = distance_map[y,x]
+                    if sample_map[y, x] > 0:
+                        value = distance_map[y, x]
                         if value > max_value:
                             max_found = True
                             max_value = value
