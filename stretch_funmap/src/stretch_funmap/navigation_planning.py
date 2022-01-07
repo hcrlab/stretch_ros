@@ -1,9 +1,9 @@
 import copy
 import cv2
+import cython_min_cost_path as cm
 import hello_helpers.hello_misc as hm
 import numpy as np
 import scipy.ndimage as nd
-import stretch_funmap.cython_min_cost_path as cm
 import stretch_funmap.segment_max_height_image as sm
 from stretch_funmap.numba_check_line_path import numba_check_line_path
 from stretch_funmap.numba_sample_ridge import numba_sample_ridge, numba_sample_ridge_list
