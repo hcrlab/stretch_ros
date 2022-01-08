@@ -17,3 +17,8 @@ stretch_description/urdf/exported_urdf/*
 stretch_description/urdf/exported_urdf_previous
 stretch_description/urdf/exported_urdf_previous/*
 stretch_funmap/src/stretch_funmap/cython_min_cost_path.c
+
+**/.get_grasp_from_pregrasp
+**/.grasp_object
+**/.get_grasp_target
+**/.get_pregrasp_planar_translation
