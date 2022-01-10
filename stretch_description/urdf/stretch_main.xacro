@@ -13,14 +13,14 @@
         xyz="-0.109461304328163 -0.000741018909047708 0.0914915269429946"
         rpy="0 0 0" />
       <mass
-        value="6.0" />
+        value="12.0" />
       <inertia
-        ixx="0.00310580907710135"
-        ixy="1.5182848191076E-06"
-        ixz="0.00041690466732394"
-        iyy="0.00433798719991832"
-        iyz="1.33487716258445E-05"
-        izz="0.0037204727467362" />
+        ixx="0.00013"
+        ixy="0"
+        ixz="0"
+        iyy="0.00012"
+        iyz="0"
+        izz="0.000218" />
     </inertial>
     <visual>
       <origin
@@ -84,6 +84,7 @@
       <geometry>
         <mesh
           filename="package://stretch_description/meshes/link_right_wheel.STL" />
+          <!-- <cylinder radius="0.051" length="0.0225" /> -->
       </geometry>
     </collision>
   </link>
@@ -140,6 +141,7 @@
       <geometry>
         <mesh
           filename="package://stretch_description/meshes/link_left_wheel.STL" />
+        <!-- <cylinder radius="0.051" length="0.0225" /> -->
       </geometry>
     </collision>
   </link>
@@ -214,17 +216,17 @@
     name="link_mast">
     <inertial>
       <origin
-        xyz="0.00755818572975822 0.773971284176834 0.00647313086620024"
+        xyz="0 0.7073971284176834 0"
         rpy="0 0 0" />
       <mass
         value="0.749143203376401" />
       <inertia
-        ixx="0.0709854511954588"
-        ixy="-0.00433428742758457"
-        ixz="-0.000186110788697573"
-        iyy="0.000437922053342648"
-        iyz="-0.00288788257713431"
-        izz="0.071104808501661" />
+        ixx="0.000251"
+        ixy="0"
+        ixz="-0"
+        iyy="0.000000"
+        iyz="0"
+        izz="0.000251" />
     </inertial>
     <visual>
       <origin
