@@ -1,45 +1,39 @@
 #!/usr/bin/env python3
 
-import rospy
 import actionlib
-
-from sensor_msgs.msg import JointState
+import argparse as ap
+import copy
+import cv2
+import hello_helpers.hello_misc as hm
+import hello_helpers.hello_ros_viz as hr
+import math
+import numpy as np
+import os
+import ros_numpy
+import rospy
+import scipy.ndimage as nd
+import stretch_funmap.manipulation_planning as mp
+import stretch_funmap.mapping as ma
+import stretch_funmap.merge_maps as mm
+import stretch_funmap.navigate as nv
+import stretch_funmap.navigation_planning as na
+import stretch_funmap.segment_max_height_image as sm
+import sys
+import tf2_ros
+import tf_conversions
+import threading
+import time
 from geometry_msgs.msg import Transform, TransformStamped, PoseWithCovarianceStamped, PoseStamped, Pose, PointStamped
-from nav_msgs.msg import Odometry
 from move_base_msgs.msg import MoveBaseAction, MoveBaseResult, MoveBaseFeedback
-from nav_msgs.srv import GetPlan
+from nav_msgs.msg import Odometry
 from nav_msgs.msg import Path
+from nav_msgs.srv import GetPlan
+from sensor_msgs.msg import JointState
 from sensor_msgs.msg import PointCloud2
-from visualization_msgs.msg import Marker, MarkerArray
 from std_srvs.srv import Trigger, TriggerResponse, TriggerRequest
 from tf.transformations import euler_from_quaternion
 from tf2_geometry_msgs import do_transform_pose
-
-import numpy as np
-import scipy.ndimage as nd
-import cv2
-import math
-import time
-import threading
-import sys
-import os
-import copy
-
-import tf_conversions
-import ros_numpy
-import tf2_ros
-
-import argparse as ap
-
-import hello_helpers.hello_misc as hm
-import hello_helpers.hello_ros_viz as hr
-
-import stretch_funmap.merge_maps as mm
-import stretch_funmap.navigate as nv
-import stretch_funmap.mapping as ma
-import stretch_funmap.segment_max_height_image as sm
-import stretch_funmap.navigation_planning as na
-import stretch_funmap.manipulation_planning as mp
+from visualization_msgs.msg import Marker, MarkerArray
 
 
 def create_map_to_odom_transform(t_mat):
@@ -78,7 +72,7 @@ class ContactDetector():
             return self.contact_mode == 'regulate_contact'
 
     def set_stopping_position(self, stopping_position, direction_sign):
-        assert((direction_sign == -1) or (direction_sign == 1))
+        assert ((direction_sign == -1) or (direction_sign == 1))
         self.stopping_position = stopping_position
         self.direction_sign = direction_sign
 
@@ -135,15 +129,16 @@ class ContactDetector():
             trigger_result = stop_the_robot_service(trigger_request)
             with self.contact_mode_lock:
                 self.contact_mode = 'passed_stopping_point'
-            rospy.loginfo('stop_on_contact: stopping the robot due to passing the stopping position, position = {0}, stopping_position = {1}, direction_sign = {2}'.format(
-                self.position, self.stopping_position, self.direction_sign))
+            rospy.loginfo(
+                'stop_on_contact: stopping the robot due to passing the stopping position, position = {0}, stopping_position = {1}, direction_sign = {2}'.format(
+                    self.position, self.stopping_position, self.direction_sign))
 
         # Second, check that the effort thresholds have not been exceeded
         if self.av_effort is None:
             self.av_effort = effort
         else:
             self.av_effort = (((self.av_effort_window_size - 1.0) *
-                              self.av_effort) + effort) / self.av_effort_window_size
+                               self.av_effort) + effort) / self.av_effort_window_size
 
         if self.in_contact_func(effort, self.av_effort):
             # Contact detected!
@@ -154,8 +149,9 @@ class ContactDetector():
                 if self.contact_mode == 'stop_on_contact':
                     trigger_request = TriggerRequest()
                     trigger_result = stop_the_robot_service(trigger_request)
-                    rospy.loginfo('stop_on_contact: stopping the robot due to detected contact, effort = {0}, av_effort = {1}'.format(
-                        effort, self.av_effort))
+                    rospy.loginfo(
+                        'stop_on_contact: stopping the robot due to detected contact, effort = {0}, av_effort = {1}'.format(
+                            effort, self.av_effort))
                     self.contact_mode = 'regulate_contact'
                 elif self.contact_mode == 'regulate_contact':
                     pass
@@ -316,11 +312,11 @@ class FunmapNode(hm.HelloNode):
         duration_s = 1 * 60
         timestamp = rospy.Time.now()
         m = hr.create_line_strip(points, 0, points_frame_id, timestamp, rgba=[
-                                 0.0, 1.0, 0.0, 1.0], line_width_m=0.05, duration_s=duration_s)
+            0.0, 1.0, 0.0, 1.0], line_width_m=0.05, duration_s=duration_s)
         nav_markers.markers.append(m)
         for i, p in enumerate(points):
-            m = hr.create_sphere_marker(p, i+1, points_frame_id, timestamp, rgba=[
-                                        1.0, 1.0, 1.0, 1.0], diameter_m=0.15, duration_s=duration_s)
+            m = hr.create_sphere_marker(p, i + 1, points_frame_id, timestamp, rgba=[
+                1.0, 1.0, 1.0, 1.0], diameter_m=0.15, duration_s=duration_s)
             nav_markers.markers.append(m)
         self.navigation_plan_markers_pub.publish(nav_markers)
         self.prev_nav_markers = nav_markers
@@ -346,7 +342,7 @@ class FunmapNode(hm.HelloNode):
             # Find the robot's current pose in the odom frame.
             xya, timestamp = self.get_robot_floor_pose_xya(floor_frame='odom')
             robot_ang = xya[2]
-            align_arm_ang = robot_ang + (np.pi/2.0)
+            align_arm_ang = robot_ang + (np.pi / 2.0)
 
             # Find the angle that the robot should turn in order
             # to point toward the next waypoint.
@@ -660,7 +656,7 @@ class FunmapNode(hm.HelloNode):
         # of the swept volume of the wrist (a
         # little right of center when looking out
         # from the robot to the gripper)
-        #simple_reach_plan.append({'joint_gripper': -0.25})
+        # simple_reach_plan.append({'joint_gripper': -0.25})
         simple_reach_plan.append({'joint_wrist_yaw': -0.25})
 
         # reach out to the target
@@ -820,7 +816,7 @@ class FunmapNode(hm.HelloNode):
                 travel_dist = np.linalg.norm(travel_vector)
                 travel_ang = np.arctan2(travel_vector[1], travel_vector[0])
                 rospy.loginfo('travel_dist =' + str(travel_dist))
-                rospy.loginfo('travel_ang =' + str(travel_ang * (180.0/np.pi)))
+                rospy.loginfo('travel_ang =' + str(travel_ang * (180.0 / np.pi)))
 
                 # Find the angle that the robot should turn in order
                 # to point toward the next waypoint.
@@ -829,7 +825,7 @@ class FunmapNode(hm.HelloNode):
                 # Command the robot to turn to point to the next
                 # waypoint.
                 rospy.loginfo('robot turn angle in degrees =' +
-                              str(turn_ang * (180.0/np.pi)))
+                              str(turn_ang * (180.0 / np.pi)))
                 at_goal = self.move_base.turn(
                     turn_ang, publish_visualizations=True)
                 if not at_goal:
@@ -894,7 +890,7 @@ class FunmapNode(hm.HelloNode):
                 # Command the robot to turn to point to the next
                 # waypoint.
                 rospy.loginfo('robot turn angle in degrees =' +
-                              str(turn_ang * (180.0/np.pi)))
+                              str(turn_ang * (180.0 / np.pi)))
                 at_goal = self.move_base.turn(
                     turn_ang, publish_visualizations=True)
                 if not at_goal:
@@ -908,7 +904,8 @@ class FunmapNode(hm.HelloNode):
         message = 'Completed drive to new scan location.'
         return success, message
 
-    def perform_head_scan(self, fill_in_blindspot_with_second_scan=True, localize_only=False, global_localization=False, fast_scan=False):
+    def perform_head_scan(self, fill_in_blindspot_with_second_scan=True, localize_only=False, global_localization=False,
+                          fast_scan=False):
         node = self
 
         trigger_request = TriggerRequest()
@@ -962,14 +959,15 @@ class FunmapNode(hm.HelloNode):
                     'perform_head_scan: Performing local localization.')
                 use_full_size_scans = False
                 if use_full_size_scans:
-                    affine_matrix, original_robot_map_pose, corrected_robot_map_pose = mm.estimate_scan_1_to_scan_2_transform(head_scan,
-                                                                                                                              self.merged_map,
-                                                                                                                              display_on=False,
-                                                                                                                              show_unaligned=False,
-                                                                                                                              full_localization=False,
-                                                                                                                              init_target=None,
-                                                                                                                              grid_search=False,
-                                                                                                                              small_search=False)
+                    affine_matrix, original_robot_map_pose, corrected_robot_map_pose = mm.estimate_scan_1_to_scan_2_transform(
+                        head_scan,
+                        self.merged_map,
+                        display_on=False,
+                        show_unaligned=False,
+                        full_localization=False,
+                        init_target=None,
+                        grid_search=False,
+                        small_search=False)
                 else:
                     original_robot_map_frame_pose, corrected_robot_map_frame_pose, original_robot_map_image_pose, corrected_robot_map_image_pose, scaled_scan, scaled_merged_map = ma.localize_with_reduced_images(
                         head_scan, self.merged_map, global_localization=False, divisor=2, small_search=True)
@@ -1073,12 +1071,12 @@ class FunmapNode(hm.HelloNode):
         if fill_in_blindspot_with_second_scan and (not localize_only):
             # Turn the robot to the left in attempt to fill in its
             # blindspot due to its mast.
-            turn_ang = (70.0/180.0) * np.pi
+            turn_ang = (70.0 / 180.0) * np.pi
 
             # Command the robot to turn to point to the next
             # waypoint.
             rospy.loginfo('robot turn angle in degrees =' +
-                          str(turn_ang * (180.0/np.pi)))
+                          str(turn_ang * (180.0 / np.pi)))
             at_goal = self.move_base.turn(
                 turn_ang, publish_visualizations=True)
             if not at_goal:
@@ -1140,9 +1138,9 @@ class FunmapNode(hm.HelloNode):
         print('original_robot_map_pose_xya =', original_robot_map_pose_xya)
         print('corrected_robot_map_pose_xya =', corrected_robot_map_pose_xya)
         x_delta = corrected_robot_map_pose_xya[0] - \
-            original_robot_map_pose_xya[0]
+                  original_robot_map_pose_xya[0]
         y_delta = corrected_robot_map_pose_xya[1] - \
-            original_robot_map_pose_xya[1]
+                  original_robot_map_pose_xya[1]
         ang_rad_correction = hm.angle_diff_rad(
             corrected_robot_map_pose_xya[2], original_robot_map_pose_xya[2])
         c = np.cos(ang_rad_correction)
@@ -1151,7 +1149,7 @@ class FunmapNode(hm.HelloNode):
         x_old, y_old, a_old = original_robot_map_pose_xya
         xy_old = np.array([x_old, y_old])
         tx, ty = np.matmul(rot_mat, -xy_old) + \
-            np.array([x_delta, y_delta]) + xy_old
+                 np.array([x_delta, y_delta]) + xy_old
         t = np.identity(4)
         t[0, 3] = tx
         t[1, 3] = ty
