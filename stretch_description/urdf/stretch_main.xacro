@@ -2,7 +2,9 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="stretch_main">
   <xacro:property name="M_PI" value="3.1415926535897931" /> 
   <xacro:property name="joint_damping" value="21.75"/>
+  <xacro:property name="arm_damping" value="21.75"/>
   <xacro:property name="joint_friction" value="10.48"/>
+  <xacro:property name="arm_friction" value="2.48"/>
   <xacro:property name="joint_spring_stiffness" value="0"/>
   <xacro:property name="joint_spring_reference" value="0"/>
 
@@ -323,7 +325,8 @@
   <!-- for now: hand copied range_m: from lift: from ~/repos/stretch_fleet/stretch-re1-1001/stretch_re1_factory_params.yaml -->
   <!--<limit effort="100" lower="0.0" upper="1.095" velocity="1.0"/>-->
   <!-- copied value did not reach the top of mesh model with GUI sliders and RViz -->
-  <limit effort="100" lower="0.0" upper="1.1" velocity="1.0"/>
+  <limit effort="100" lower="0.0" upper="1.1" velocity="0.5"/>
+  <dynamics friction="40.0" damping="5.0"/>
   </joint>
   
   <link
@@ -379,6 +382,8 @@
       link="link_arm_l4" />
     <axis
       xyz="0 0 0" />
+    <dynamics damping="${arm_damping}" friction="${arm_friction}" />
+
   </joint>
   
   <link
@@ -435,7 +440,8 @@
     <axis
 	xyz="0 0 1" />
     <!-- 0.13 = 0.52/4-->
-    <limit effort="100" lower="0.0" upper="0.13" velocity="1.0"/>
+    <limit effort="100" lower="0.0" upper="0.13" velocity="0.1"/>
+    <dynamics damping="${arm_damping}" friction="${arm_friction}" />
   </joint>
   
   <link
@@ -492,7 +498,8 @@
     <axis
 	xyz="0 0 1" />
     <!-- 0.13 = 0.52/4-->
-    <limit effort="100" lower="0.0" upper="0.13" velocity="1.0"/>
+    <limit effort="100" lower="0.0" upper="0.13" velocity="0.1"/>
+    <dynamics damping="${arm_damping}" friction="${arm_friction}" />
   </joint>
   
   <link
@@ -549,7 +556,8 @@
     <axis
 	xyz="0 0 1" />
     <!-- 0.13 = 0.52/4-->
-    <limit effort="100" lower="0.0" upper="0.13" velocity="1.0"/>
+    <limit effort="100" lower="0.0" upper="0.13" velocity="0.1"/>
+    <dynamics damping="${arm_damping}" friction="${arm_friction}" />
   </joint>
   
   <link
@@ -606,7 +614,8 @@
     <axis
 	xyz="0 0 1" />
     <!-- 0.13 = 0.52/4-->
-    <limit effort="100" lower="0.0" upper="0.13" velocity="1.0"/>
+    <limit effort="100" lower="0.0" upper="0.13" velocity="0.1"/>
+    <dynamics damping="${arm_damping}" friction="${arm_friction}" />
   </joint>
   
   <link
@@ -668,7 +677,7 @@
       stowed to back ~100 deg:  100 / 180 x 3.14159 = 1.7453
       using -1.75
     -->
-    <limit effort="100" lower="-1.75" upper="4.0" velocity="1.0"/>
+    <limit effort="100" lower="-1.75" upper="4.0" velocity="0.3"/>
   </joint>
   
   <link
