@@ -1,4 +1,7 @@
 global_costmap:
+  robot_radius: 0.22
+  footprint: [[0.05, -0.17], [-0.17, -0.17], [-0.28, 0], [-0.17, 0.17], [0.05, 0.17]]
+  footprint_padding: 0.05
   plugins:
     - {name: static_map_layer, type: "costmap_2d::StaticLayer"}
     - {name: obstacle_layer_3d, type: "costmap_2d::VoxelLayer"}
@@ -10,5 +13,5 @@ global_costmap:
   publish_frequency: 0.5
 
   inflation_layer:
-    inflation_radius: 0.5
-    cost_scaling_factor: 1.0
+    inflation_radius: 0.3
+    cost_scaling_factor: 10.0
