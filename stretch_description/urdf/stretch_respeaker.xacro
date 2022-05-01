@@ -19,7 +19,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="0 0 ${pi/2}" />
       <geometry>
         <mesh
           filename="package://stretch_description/meshes/link_respeaker.STL" />
@@ -27,16 +27,23 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .16 1" />
       </material>
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="-0.0033 0.0232 -0.0196"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/link_respeaker.STL" />
+        <box size="0.0635 0.0471 0.0367" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0.0001 0.0059 -0.0163"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.0070" length="0.0096" />
       </geometry>
     </collision>
   </link>
@@ -46,8 +53,8 @@
     type="fixed">
     <!-- rpy="   ?   rotate_sound_source_direction    ?   " --> 
     <origin
-      xyz="1.09074743137871E-05 1.36992 0.00303572796911382"
-      rpy="1.57079632679553 0.0 3.14159265358916" />
+      xyz="0 1.36992 0.00303572796911382"
+      rpy="${pi/2} 0.0 ${pi}" />
     <parent
       link="link_mast" />
     <child

@@ -30,7 +30,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .16 1" />
       </material>
     </visual>
     <collision>
@@ -39,7 +39,15 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/link_gripper.STL" />
+          filename="package://stretch_description/meshes/collision/link_gripper.STL" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="-0.0039 0.0139 -0.0289"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.0423 0.0618 0.0578" />
       </geometry>
     </collision>
   </link>
@@ -51,7 +59,7 @@
     type="fixed">
     <origin
       xyz="0 0 0"
-      rpy="3.14159 0 -1.5708" />
+      rpy="3.14159 0 -${pi/2}" />
     <parent
       link="link_wrist_yaw" />
     <child
@@ -64,7 +72,7 @@
     name="link_gripper_finger_left">
     <inertial>
       <origin
-        xyz="0.0945047483510102 0.0124301080924361 -4.44089209850063E-16"
+        xyz="0.0945047483510102 0.0124301080924361 0"
         rpy="0 0 0" />
       <mass
         value="0.0476207785199474" />
@@ -87,7 +95,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba="0.8 .8 .8 1" />
       </material>
     </visual>
     <collision>
@@ -106,7 +114,7 @@
     type="revolute">
     <origin
       xyz="-0.047231 -0.010151 -0.04679"
-      rpy="2.1762E-15 0.5236 3.1416" />
+      rpy="0 0.5236 3.1416" />
     <parent
       link="link_gripper" />
     <child
@@ -120,7 +128,7 @@
     name="link_gripper_fingertip_left">
     <inertial>
       <origin
-        xyz="-3.16381381648689E-08 -2.91408530639359E-09 0.00812579670381812"
+        xyz="0 0 0.00812579670381812"
         rpy="0 0 0" />
       <mass
         value="0.00382159917455729" />
@@ -138,12 +146,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/link_gripper_fingertip_left.STL" />
+          filename="package://stretch_description/meshes/link_gripper_fingertip.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+          rgba="0.25 0.25 0.25 1" />
       </material>
     </visual>
     <collision>
@@ -152,7 +160,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/link_gripper_fingertip_left.STL" />
+          filename="package://stretch_description/meshes/collision/link_gripper_fingertip.STL" />
       </geometry>
     </collision>
   </link>
@@ -162,7 +170,7 @@
     type="fixed">
     <origin
       xyz="${scale_finger_length * 0.19011} 0.014912 0"
-      rpy="-1.5708 -4.774E-15 -2.5545" />
+      rpy="-${pi/2} 0 -2.5545" />
     <parent
       link="link_gripper_finger_left" />
     <child
@@ -198,7 +206,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".8 .8 .8 1" />
       </material>
     </visual>
     <collision>
@@ -217,7 +225,7 @@
     type="revolute">
     <origin
       xyz="-0.047231 0.010049 -0.04679"
-      rpy="3.1416 -0.5236 1.2943E-15" />
+      rpy="3.1416 -0.5236 0" />
     <parent
       link="link_gripper" />
     <child
@@ -231,7 +239,7 @@
     name="link_gripper_fingertip_right">
     <inertial>
       <origin
-        xyz="2.59386303963494E-08 6.70949018566347E-09 0.00812579516130402"
+        xyz="0 0 0.00812579516130402"
         rpy="0 0 0" />
       <mass
         value="0.00382160037319545" />
@@ -249,12 +257,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/link_gripper_fingertip_right.STL" />
+          filename="package://stretch_description/meshes/link_gripper_fingertip.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+          rgba="0.25 0.25 0.25 1" />
       </material>
     </visual>
     <collision>
@@ -263,7 +271,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/link_gripper_fingertip_right.STL" />
+          filename="package://stretch_description/meshes/collision/link_gripper_fingertip.STL" />
       </geometry>
     </collision>
   </link>
@@ -273,7 +281,7 @@
     type="fixed">
     <origin
       xyz="${scale_finger_length * -0.19011} -0.014912 0"
-      rpy="-1.5708 -2.0539E-15 0.58705" />
+      rpy="-${pi/2} 0 0.58705" />
     <parent
       link="link_gripper_finger_right" />
     <child

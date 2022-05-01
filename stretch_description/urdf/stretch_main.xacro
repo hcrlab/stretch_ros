@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="stretch_main">
-  <xacro:property name="M_PI" value="3.1415926535897931" /> 
+
   <xacro:property name="joint_damping" value="21.75"/>
   <xacro:property name="arm_damping" value="21.75"/>
   <xacro:property name="joint_friction" value="10.48"/>
@@ -33,9 +33,9 @@
           filename="package://stretch_description/meshes/base_link.STL" />
       </geometry>
       <material
-        name="">
+        name="LightGray">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".74 .74 .78 1" />
       </material>
     </visual>
     <collision>
@@ -44,16 +44,16 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/base_link.STL" />
+          filename="package://stretch_description/meshes/collision/base_link.STL" />
       </geometry>
     </collision>
   </link>
-  
+
   <link
     name="link_right_wheel">
     <inertial>
       <origin
-        xyz="1.25554620866719E-07 3.54748938447003E-07 0.0239581106165018"
+        xyz="0 0 0.0239581106165018"
         rpy="0 0 0" />
       <mass
         value="0.01" />
@@ -76,7 +76,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .13 1" />
       </material>
     </visual>
     <collision>
@@ -84,19 +84,17 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/link_right_wheel.STL" />
-          <!-- <cylinder radius="0.051" length="0.0225" /> -->
+          <cylinder radius="0.051" length="0.0225" />
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_right_wheel"
     type="continuous">
     <origin
       xyz="-0.00300000000000034 -0.15765 0.0508000000000004"
-      rpy="-1.57079632679489 -1.11022302462516E-16 7.28583859910277E-17" />
+      rpy="-${pi/2} 0 0 " />
     <parent
       link="base_link" />
     <child
@@ -105,12 +103,12 @@
       xyz="0 0 1" />
     <dynamics damping="${joint_damping}" friction="${joint_friction}" spring_reference="${joint_spring_reference}" spring_stiffness="{joint_spring_stiffness}"/>
   </joint>
-  
+
   <link
     name="link_left_wheel">
     <inertial>
       <origin
-        xyz="1.2555462092223E-07 -3.54748938502514E-07 -0.0239581106165035"
+        xyz="0 0 -0.0239581106165035"
         rpy="0 0 0" />
       <mass
         value="0.01" />
@@ -133,7 +131,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .13 1" />
       </material>
     </visual>
     <collision>
@@ -141,19 +139,17 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/link_left_wheel.STL" />
-        <!-- <cylinder radius="0.051" length="0.0225" /> -->
+          <cylinder radius="0.051" length="0.0225" />
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_left_wheel"
     type="continuous">
     <origin
       xyz="-0.00300000000001899 0.15765 0.0507999999999994"
-      rpy="-1.5707963267949 3.16227047920818E-31 7.88745438253713E-16" />
+      rpy="-1.5707963267949 0 0" />
     <parent
       link="base_link" />
     <child
@@ -191,7 +187,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .13 1" />
       </material>
     </visual>
     <inertial>
@@ -210,7 +206,7 @@
   <joint name="caster_joint" type="fixed">
     <parent link="base_link"/>
     <child link="caster_link"/>
-    <origin xyz="-0.245 0.0 0.032" rpy="${-M_PI/2} 0 0"/>
+    <origin xyz="-0.245 0.0 0.032" rpy="${-pi/2} 0 0"/>
     <axis xyz="0 0 1" />
   </joint>
 
@@ -241,20 +237,19 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .13 1" />
       </material>
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="0 0.7075 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/link_mast.STL" />
+        <box size="0.0384 1.2850 0.0384" />
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_mast"
     type="fixed">
@@ -268,7 +263,7 @@
     <axis
       xyz="0 0 0" />
   </joint>
-  
+
   <link
     name="link_lift">
     <inertial>
@@ -296,7 +291,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".5 .5 .5 1" />
       </material>
     </visual>
     <collision>
@@ -305,17 +300,17 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/link_lift.STL" />
+          filename="package://stretch_description/meshes/collision/link_lift.STL" />
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_lift"
     type="prismatic">
     <origin
       xyz="-0.0369217062323472 0.165471199999996 -0.000341653286793524"
-      rpy="-1.57079632679552 1.5615431375292 -6.2942004366467E-13" />
+      rpy="-${pi/2} ${pi/2} 0" />
     <parent
       link="link_mast" />
     <child
@@ -328,12 +323,12 @@
   <limit effort="100" lower="0.0" upper="1.1" velocity="0.5"/>
   <dynamics friction="40.0" damping="5.0"/>
   </joint>
-  
+
   <link
     name="link_arm_l4">
     <inertial>
       <origin
-        xyz="-1.61247276464493E-06 1.54715589201215E-06 -0.0953252706040035"
+        xyz="0 0 -0.0953252706040035"
         rpy="0 0 0" />
       <mass
         value="0.0676525455789735" />
@@ -356,26 +351,25 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .13 1" />
       </material>
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="0 0 -0.1112"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/link_arm_l4.STL" />
+        <box size="0.0593 0.0592 0.2225" />
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_arm_l4"
     type="fixed">
     <origin
       xyz="-0.25471 0 0"
-      rpy="1.5708 -3.1019E-16 -1.5708" />
+      rpy="${pi/2} 0 -${pi/2}" />
     <parent
       link="link_lift" />
     <child
@@ -385,12 +379,12 @@
     <dynamics damping="${arm_damping}" friction="${arm_friction}" />
 
   </joint>
-  
+
   <link
     name="link_arm_l3">
     <inertial>
       <origin
-        xyz="-3.34873468621488E-07 4.7411336306924E-07 -0.0974069598289041"
+        xyz="0 0 -0.0974069598289041"
         rpy="0 0 0" />
       <mass
         value="0.0626921047058405" />
@@ -413,26 +407,25 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .13 1" />
       </material>
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="0 0 -0.1133"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/link_arm_l3.STL" />
+        <box size="0.0552 0.0552 0.2265" />
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_arm_l3"
     type="prismatic">
     <origin
       xyz="0 0 0.013"
-      rpy="3.5742E-16 3.2123E-16 -2.4565E-16" />
+      rpy="0 0 0" />
     <parent
       link="link_arm_l4" />
     <child
@@ -443,12 +436,12 @@
     <limit effort="100" lower="0.0" upper="0.13" velocity="0.1"/>
     <dynamics damping="${arm_damping}" friction="${arm_friction}" />
   </joint>
-  
+
   <link
     name="link_arm_l2">
     <inertial>
       <origin
-        xyz="-3.31043560508615E-07 3.13422303999111E-07 -0.097255883541891"
+        xyz="0 0 -0.097255883541891"
         rpy="0 0 0" />
       <mass
         value="0.0569074368576238" />
@@ -471,16 +464,15 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .13 1" />
       </material>
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="0 0 -0.1133"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/link_arm_l2.STL" />
+        <box size="0.0512 0.0512 0.2265" />
       </geometry>
     </collision>
   </link>
@@ -490,7 +482,7 @@
     type="prismatic">
     <origin
       xyz="0 0 0.013"
-      rpy="2.91385731014123E-16 4.44300759504684E-17 3.25691080516352E-16" />
+      rpy="0 0 0" />
     <parent
       link="link_arm_l3" />
     <child
@@ -501,12 +493,12 @@
     <limit effort="100" lower="0.0" upper="0.13" velocity="0.1"/>
     <dynamics damping="${arm_damping}" friction="${arm_friction}" />
   </joint>
-  
+
   <link
     name="link_arm_l1">
     <inertial>
       <origin
-        xyz="-3.36876635420591E-07 3.05876091066803E-07 -0.0969117032232756"
+        xyz="0 0 -0.0969117032232756"
         rpy="0 0 0" />
       <mass
         value="0.0511763619538321" />
@@ -529,26 +521,25 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .13 1" />
       </material>
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="0 0 -0.1133"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/link_arm_l1.STL" />
+        <box size="0.0473 0.0472 0.2265"/>
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_arm_l1"
     type="prismatic">
     <origin
       xyz="0 0 0.013"
-      rpy="7.41596560408007E-17 1.33876788296791E-16 -2.44545873596083E-16" />
+      rpy="0 0 0" />
     <parent
       link="link_arm_l2" />
     <child
@@ -559,7 +550,7 @@
     <limit effort="100" lower="0.0" upper="0.13" velocity="0.1"/>
     <dynamics damping="${arm_damping}" friction="${arm_friction}" />
   </joint>
-  
+
   <link
     name="link_arm_l0">
     <inertial>
@@ -587,7 +578,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".13 .13 .13 1" />
       </material>
     </visual>
     <collision>
@@ -596,17 +587,25 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/link_arm_l0.STL" />
+          filename="package://stretch_description/meshes/collision/link_arm_l0.STL" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0.0002 -0.0003 -0.0865"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.0457 0.0452 0.2265" />
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_arm_l0"
     type="prismatic">
     <origin
       xyz="0 0 -0.0137499999999938"
-      rpy="-3.05317390622457E-16 -4.23236224076729E-16 -2.68425135229209E-17" />
+      rpy="0 0 0" />
     <parent
       link="link_arm_l1" />
     <child
@@ -617,12 +616,12 @@
     <limit effort="100" lower="0.0" upper="0.13" velocity="0.1"/>
     <dynamics damping="${arm_damping}" friction="${arm_friction}" />
   </joint>
-  
+
   <link
     name="link_wrist_yaw">
     <inertial>
       <origin
-        xyz="-8.02795716750571E-06 1.93811447768422E-05 0.018946700595851"
+        xyz="0 0 0.018946700595851"
         rpy="0 0 0" />
       <mass
         value="0.0405398981326229" />
@@ -645,7 +644,7 @@
       <material
         name="">
         <color
-	        rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+	        rgba=".13 .13 .13 1" />
       </material>
     </visual>
     <collision>
@@ -653,18 +652,17 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/link_wrist_yaw.STL" />
+        <cylinder radius="0.015" length="0.0380" />
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_wrist_yaw"
     type="revolute">
     <origin
       xyz="0.083 -0.03075 0"
-      rpy="1.5708 4.2595E-14 2.6415E-15" />
+      rpy="${pi/2} 0 0" />
     <parent
       link="link_arm_l0" />
     <child
@@ -679,7 +677,7 @@
     -->
     <limit effort="100" lower="-1.75" upper="4.0" velocity="0.3"/>
   </joint>
-  
+
   <link
     name="link_head">
     <inertial>
@@ -707,7 +705,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".5 .5 .5 1" />
       </material>
     </visual>
     <collision>
@@ -716,7 +714,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/link_head.STL" />
+          filename="package://stretch_description/meshes/collision/link_head.STL" />
       </geometry>
     </collision>
   </link>
@@ -726,7 +724,7 @@
     type="fixed">
     <origin
       xyz="0 1.33 0"
-      rpy="1.5708 -1.5615 3.1416" />
+      rpy="${pi/2} -${pi/2} ${pi}" />
     <parent
       link="link_mast" />
     <child
@@ -762,7 +760,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".5 .5 .5 1" />
       </material>
     </visual>
     <collision>
@@ -771,7 +769,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/link_head_pan.STL" />
+          filename="package://stretch_description/meshes/collision/link_head_pan.STL" />
       </geometry>
     </collision>
   </link>
@@ -781,7 +779,7 @@
     type="revolute">
     <origin
       xyz="0.135 0.0731 -0.003"
-      rpy="-6.4986E-15 -6.068E-24 1.5708" />
+      rpy="0 0 ${pi/2}" />
     <parent
       link="link_head" />
     <child
@@ -791,7 +789,7 @@
     <!-- unconstrained range for now -->
     <limit effort="100" lower="-3.9" upper="1.5" velocity="1.0"/>
   </joint>
-  
+
   <link
     name="link_head_tilt">
     <inertial>
@@ -819,7 +817,7 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba=".74 .74 .78 1" />
       </material>
     </visual>
     <collision>
@@ -828,7 +826,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/link_head_tilt.STL" />
+          filename="package://stretch_description/meshes/collision/link_head_tilt.STL" />
       </geometry>
     </collision>
   </link>
@@ -838,7 +836,7 @@
     type="revolute">
     <origin
       xyz="-0.0013 0.027507 -0.053311"
-      rpy="1.5708 6.068E-24 -2.5165E-15" />
+      rpy="${pi/2} 0 0" />
     <parent
       link="link_head_pan" />
     <child
