@@ -35,11 +35,26 @@
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="-0.0133 -0.0414 -0.0208"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/dexwrist/link_wrist_yaw_bottom.STL" />
+        <box size="0.0629 0.0542 0.0415" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0.0005 -0.0146 -0.0042"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.0304 0.0807 0.0083" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0 0.0203 -0.0195"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.0295 0.0109 0.039" />
       </geometry>
     </collision>
   </link>
@@ -92,7 +107,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://stretch_description/meshes/dexwrist/link_wrist_pitch.STL" />
+          filename="package://stretch_description/meshes/dexwrist/collision/link_wrist_pitch.STL" />
       </geometry>
     </collision>
   </link>
@@ -142,11 +157,10 @@
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="0 0 0.0077"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/dexwrist/link_wrist_roll.STL" />
+        <cylinder radius="0.0145" length="0.0155" />
       </geometry>
     </collision>
   </link>
@@ -196,11 +210,18 @@
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="0 -0.0143 0.0280"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://stretch_description/meshes/dexwrist/link_straight_gripper.STL" />
+        <box size="0.0496 0.0556 0.0560" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin
+        xyz="0 0 0.0759"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.0432 0.0292 0.0648" />
       </geometry>
     </collision>
   </link>
