@@ -54,7 +54,7 @@ obstacle_layer_3d:
 obstacle_layer_2d:
   observation_sources: laser
   laser: { data_type: LaserScan,
-           topic: /scan,
+           topic: /scan_filtered,
            marking: true,
            clearing: true,
            expected_update_rate: 0.3,
