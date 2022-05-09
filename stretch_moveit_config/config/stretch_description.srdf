@@ -17,16 +17,12 @@
         <joint name="joint_arm_l1"/>
         <joint name="joint_arm_l0"/>
         <joint name="joint_wrist_yaw"/>
-    </group>
-    <group name="stretch_gripper">
         <link name="link_gripper"/>
         <link name="link_grasp_center"/>
         <link name="link_gripper_finger_left"/>
         <link name="link_gripper_finger_right"/>
         <link name="link_gripper_fingertip_left"/>
         <link name="link_gripper_fingertip_right"/>
-    </group>
-    <group name="stretch_head">
         <joint name="joint_head_pan" />
         <joint name="joint_head_tilt" />
         <link name="camera_link"/>
