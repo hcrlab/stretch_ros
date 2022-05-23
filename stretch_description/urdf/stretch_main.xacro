@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="stretch_main">
 
-  <xacro:property name="joint_damping" value="21.75"/>
-  <xacro:property name="arm_damping" value="21.75"/>
-  <xacro:property name="joint_friction" value="10.48"/>
-  <xacro:property name="arm_friction" value="2.48"/>
+  <xacro:property name="joint_damping" value="200"/>
+  <xacro:property name="arm_damping" value="200"/>
+  <xacro:property name="joint_friction" value="10"/>
+  <xacro:property name="arm_friction" value="20"/>
   <xacro:property name="joint_spring_stiffness" value="0"/>
   <xacro:property name="joint_spring_reference" value="0"/>
 
@@ -15,7 +15,7 @@
         xyz="-0.109461304328163 -0.000741018909047708 0.0914915269429946"
         rpy="0 0 0" />
       <mass
-        value="12.0" />
+        value="16.0" />
       <inertia
         ixx="0.00013"
         ixy="0"
@@ -217,7 +217,7 @@
         xyz="0 0.7073971284176834 0"
         rpy="0 0 0" />
       <mass
-        value="0.749143203376401" />
+        value="3" />
       <inertia
         ixx="0.000251"
         ixy="0"
@@ -271,7 +271,7 @@
         xyz="-0.0547636346252869 0.0380939689802074 0.00933159404448308"
         rpy="0 0 0" />
       <mass
-        value="0.444820831236007" />
+        value="0.5" />
       <inertia
         ixx="0.000567192946271367"
         ixy="-0.00024607534789508"
@@ -320,8 +320,8 @@
   <!-- for now: hand copied range_m: from lift: from ~/repos/stretch_fleet/stretch-re1-1001/stretch_re1_factory_params.yaml -->
   <!--<limit effort="100" lower="0.0" upper="1.095" velocity="1.0"/>-->
   <!-- copied value did not reach the top of mesh model with GUI sliders and RViz -->
-  <limit effort="100" lower="0.0" upper="1.1" velocity="0.5"/>
-  <dynamics friction="40.0" damping="5.0"/>
+  <limit effort="100" lower="0.0" upper="1.1" velocity="0.3"/>
+  <dynamics friction="40.0" damping="200.0"/>
   </joint>
 
   <link
@@ -331,7 +331,7 @@
         xyz="0 0 -0.0953252706040035"
         rpy="0 0 0" />
       <mass
-        value="0.0676525455789735" />
+        value="0.07" />
       <inertia
         ixx="0.000122002023066796"
         ixy="7.29593356230121E-13"
@@ -387,7 +387,7 @@
         xyz="0 0 -0.0974069598289041"
         rpy="0 0 0" />
       <mass
-        value="0.0626921047058405" />
+        value="0.07" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -444,7 +444,7 @@
         xyz="0 0 -0.097255883541891"
         rpy="0 0 0" />
       <mass
-        value="0.0569074368576238" />
+        value="0.06" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -501,7 +501,7 @@
         xyz="0 0 -0.0969117032232756"
         rpy="0 0 0" />
       <mass
-        value="0.0511763619538321" />
+        value="0.05" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -558,7 +558,7 @@
         xyz="0.0230715049668191 -0.00195115833662818 -0.0360646347160285"
         rpy="0 0 0" />
       <mass
-        value="0.101241250325294" />
+        value="0.10" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -624,7 +624,7 @@
         xyz="0 0 0.018946700595851"
         rpy="0 0 0" />
       <mass
-        value="0.0405398981326229" />
+        value="0.08" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -685,7 +685,7 @@
         xyz="0.0372933550588956 0.045509432985552 0.0281136801213409"
         rpy="0 0 0" />
       <mass
-        value="0.129454717596498" />
+        value="0.13" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -740,7 +740,7 @@
         xyz="-0.00116200255310878 0.0130365621706306 0.00137629842298681"
         rpy="0 0 0" />
       <mass
-        value="0.035858341182617" />
+        value="0.04" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -797,7 +797,7 @@
         xyz="0.00920211049011871 -0.0279724762416447 0.0306580436227023"
         rpy="0 0 0" />
       <mass
-        value="0.0701242408063442" />
+        value="0.07" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -830,7 +830,7 @@
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_head_tilt"
     type="revolute">

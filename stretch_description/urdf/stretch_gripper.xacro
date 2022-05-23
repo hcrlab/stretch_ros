@@ -10,7 +10,7 @@
         xyz="-0.0170229132730066 0.0131410320934285 -0.0371614759484659"
         rpy="0 0 0" />
       <mass
-        value="0.101902711393094" />
+        value="0.45" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -67,7 +67,7 @@
     <axis
       xyz="0 0 0" />
   </joint>
-  
+
   <link
     name="link_gripper_finger_left">
     <inertial>
@@ -108,7 +108,7 @@
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_gripper_finger_left"
     type="revolute">
@@ -123,7 +123,7 @@
       xyz="0 0 1" />
     <limit effort="100" lower="-0.6" upper="0.6" velocity="1.0"/>
   </joint>
-  
+
   <link
     name="link_gripper_fingertip_left">
     <inertial>
@@ -131,7 +131,7 @@
         xyz="0 0 0.00812579670381812"
         rpy="0 0 0" />
       <mass
-        value="0.00382159917455729" />
+        value="0.01" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -164,7 +164,7 @@
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_gripper_fingertip_left"
     type="fixed">
@@ -178,7 +178,7 @@
     <axis
       xyz="0 0 0" />
   </joint>
-  
+
   <link
     name="link_gripper_finger_right">
     <inertial>
@@ -186,7 +186,7 @@
         xyz="-0.0945047483510099 -0.0124301080924345 0"
         rpy="0 0 0" />
       <mass
-        value="0.0476207785199481" />
+        value="0.05" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -219,7 +219,7 @@
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_gripper_finger_right"
     type="revolute">
@@ -234,7 +234,7 @@
       xyz="0 0 1" />
     <limit effort="100" lower="-0.6" upper="0.6" velocity="1.0"/>
   </joint>
-  
+
   <link
     name="link_gripper_fingertip_right">
     <inertial>
@@ -242,7 +242,7 @@
         xyz="0 0 0.00812579516130402"
         rpy="0 0 0" />
       <mass
-        value="0.00382160037319545" />
+        value="0.01" />
       <inertia
         ixx="0.001"
         ixy="0"
@@ -275,7 +275,7 @@
       </geometry>
     </collision>
   </link>
-  
+
   <joint
     name="joint_gripper_fingertip_right"
     type="fixed">
@@ -290,11 +290,11 @@
       xyz="0 0 0" />
   </joint>
 
-  
+
   <link
       name="link_grasp_center">
   </link>
-  
+
   <joint
     name="joint_grasp_center"
     type="fixed">
@@ -306,5 +306,5 @@
     <child
       link="link_grasp_center" />
   </joint>
-  
+
 </robot>
