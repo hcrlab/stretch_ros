@@ -51,14 +51,14 @@
   <!-- Trajectory Execution Functionality -->
   <include ns="move_group" file="$(find stretch_moveit_config)/launch/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
     <arg name="moveit_manage_controllers" value="true" />
-    <arg name="moveit_controller_manager" value="stretch_description" unless="$(arg fake_execution)"/>
+    <arg name="moveit_controller_manager" value="stretch" unless="$(arg fake_execution)"/>
     <arg name="moveit_controller_manager" value="fake" if="$(arg fake_execution)"/>
   </include>
 
   <!-- Sensors Functionality -->
-  <include ns="move_group" file="$(find stretch_moveit_config)/launch/sensor_manager.launch.xml" if="$(arg allow_trajectory_execution)">
-    <arg name="moveit_sensor_manager" value="stretch_description" />
-  </include>
+  <!--<include ns="move_group" file="$(find stretch_moveit_config)/launch/sensor_manager.launch.xml" if="$(arg allow_trajectory_execution)">
+    <arg name="moveit_sensor_manager" value="stretch" />
+  </include>-->
 
   <!-- Start the actual move_group node/action server -->
   <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen" args="$(arg command_args)">
