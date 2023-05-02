@@ -1,2 +1,0 @@
-add_cython_target(cython_min_cost_path)
-add_library(cython_min_cost_path MODULE ${cython_min_cost_path})

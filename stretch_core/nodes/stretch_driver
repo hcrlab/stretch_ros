@@ -1,4 +1,5 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python
+from __future__ import print_function
 
 import yaml
 import numpy as np
@@ -23,11 +24,10 @@ from std_srvs.srv import Trigger, TriggerResponse
 from std_srvs.srv import SetBool, SetBoolResponse
 
 from nav_msgs.msg import Odometry
-from sensor_msgs.msg import BatteryState, JointState, Imu, MagneticField
-from std_msgs.msg import Bool, Header, String
+from sensor_msgs.msg import JointState, Imu, MagneticField
+from std_msgs.msg import Header
 
 from joint_trajectory_server import JointTrajectoryAction
-from stretch_diagnostics import StretchDiagnostics
 
 
 class StretchBodyNode:
@@ -38,6 +38,8 @@ class StretchBodyNode:
 
         self.default_goal_timeout_s = 10.0
         self.default_goal_timeout_duration = rospy.Duration(self.default_goal_timeout_s)
+
+        self.mobile_base_manipulation_origin = None #{'x':None, 'y':None, 'theta':None}
 
         self.robot_stop_lock = threading.Lock()
         self.stop_the_robot = False
@@ -91,6 +93,11 @@ class StretchBodyNode:
         theta_vel = base_status['theta_vel']
         pose_time_s = base_status['pose_time_s']
 
+        if self.robot_mode == 'manipulation':
+            x = self.mobile_base_manipulation_origin['x']
+            x_vel = 0.0
+            x_effort = 0.0
+
         if self.broadcast_odom_tf:
             # publish odometry via TF
             t = TransformStamped()
@@ -121,34 +128,12 @@ class StretchBodyNode:
         odom.twist.twist.angular.z = theta_vel
         self.odom_pub.publish(odom)
 
-        # TODO: Add way to determine if the robot is charging
-        # TODO: Calculate the percentage
-        battery_state = BatteryState()
-        invalid_reading = float('NaN')
-        battery_state.header.stamp = current_time
-        battery_state.voltage = float(robot_status['pimu']['voltage'])
-        battery_state.current = float(robot_status['pimu']['current'])
-        battery_state.charge = invalid_reading
-        battery_state.capacity = invalid_reading
-        battery_state.percentage = invalid_reading
-        battery_state.design_capacity = 18.0
-        battery_state.present = True
-        self.power_pub.publish(battery_state)
-
-        calibration_status = Bool()
-        calibration_status.data = self.robot.is_calibrated()
-        self.calibration_pub.publish(calibration_status)
-
-        mode_msg = String()
-        mode_msg.data = self.robot_mode
-        self.mode_pub.publish(mode_msg)
-
         # publish joint state
         joint_state = JointState()
         joint_state.header.stamp = current_time
-        cgs = list(set(self.joint_trajectory_action.command_groups) - set([self.joint_trajectory_action.mobile_base_cg]))
-        for cg in cgs:
-            pos, vel, effort = cg.joint_state(robot_status, robot_mode=self.robot_mode)
+        for cg in self.joint_trajectory_action.command_groups:
+            pos, vel, effort = cg.joint_state(robot_status, robot_mode=self.robot_mode,
+                               manipulation_origin=self.mobile_base_manipulation_origin)
             joint_state.name.append(cg.name)
             joint_state.position.append(pos)
             joint_state.velocity.append(vel)
@@ -241,6 +226,28 @@ class StretchBodyNode:
             self.angular_velocity_radps = 0.0
         self.change_mode('navigation', code_to_run)
 
+    def turn_on_manipulation_mode(self):
+        # Manipulation mode enables mobile base translation using
+        # position control via joint_mobile_base_translation, and
+        # disables velocity control of the mobile base. It also
+        # updates the virtual prismatic joint named
+        # joint_mobile_base_translation that relates 'floor_link' and
+        # 'base_link'. This mode was originally created so that
+        # MoveIt! could treat the robot like an arm. This mode does
+        # not allow base rotation.
+        def code_to_run():
+            self.robot.base.enable_pos_incr_mode()
+            # get copy of the current robot status (uses lock held by the robot)
+            robot_status = self.robot.get_status()
+            # obtain odometry
+            # assign relevant base status to variables
+            base_status = robot_status['base']
+            x = base_status['x']
+            y = base_status['y']
+            theta = base_status['theta']
+            self.mobile_base_manipulation_origin = {'x':x, 'y':y, 'theta':theta} 
+        self.change_mode('manipulation', code_to_run)
+
     def turn_on_position_mode(self):
         # Position mode enables mobile base translation and rotation
         # using position control with sequential incremental rotations
@@ -254,7 +261,8 @@ class StretchBodyNode:
 
     def calibrate(self):
         def code_to_run():
-            self.robot.home()
+            self.robot.lift.home()
+            self.robot.arm.home()
         self.change_mode('calibration', code_to_run)
 
     ######## SERVICE CALLBACKS #######
@@ -280,19 +288,18 @@ class StretchBodyNode:
             message='Stopped the robot.'
             )
 
-    def calibrate_callback(self, request):
-        rospy.loginfo('Received calibrate_the_robot service call.')
-        self.calibrate()
-        return TriggerResponse(
-            success=True,
-            message='Calibrated.'
-        )
-
     def navigation_mode_service_callback(self, request):
         self.turn_on_navigation_mode()
         return TriggerResponse(
             success=True,
             message='Now in navigation mode.'
+            )
+
+    def manipulation_mode_service_callback(self, request):
+        self.turn_on_manipulation_mode()
+        return TriggerResponse(
+            success=True,
+            message='Now in manipulation mode.'
             )
 
     def position_mode_service_callback(self, request):
@@ -347,6 +354,8 @@ class StretchBodyNode:
             self.turn_on_position_mode()
         elif mode == "navigation":
             self.turn_on_navigation_mode()
+        elif mode == "manipulation":
+            self.turn_on_manipulation_mode()
 
         self.broadcast_odom_tf = rospy.get_param('~broadcast_odom_tf', False)
         rospy.loginfo('broadcast_odom_tf = ' + str(self.broadcast_odom_tf))
@@ -395,10 +404,6 @@ class StretchBodyNode:
 
         self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=1)
 
-        self.power_pub = rospy.Publisher('battery', BatteryState, queue_size=1)
-        self.calibration_pub = rospy.Publisher('is_calibrated', Bool, queue_size=1)
-        self.mode_pub = rospy.Publisher('mode', String, queue_size=1)
-
         self.imu_mobile_base_pub = rospy.Publisher('imu_mobile_base', Imu, queue_size=1)
         self.magnetometer_mobile_base_pub = rospy.Publisher('magnetometer_mobile_base', MagneticField, queue_size=1)
         self.imu_wrist_pub = rospy.Publisher('imu_wrist', Imu, queue_size=1)
@@ -428,7 +433,10 @@ class StretchBodyNode:
         self.fail_out_of_range_goal = rospy.get_param('~fail_out_of_range_goal', True)
         self.joint_trajectory_action = JointTrajectoryAction(self)
         self.joint_trajectory_action.server.start()
-        self.diagnostics = StretchDiagnostics(self, self.robot)
+
+        self.switch_to_manipulation_mode_service = rospy.Service('/switch_to_manipulation_mode',
+                                                                 Trigger,
+                                                                 self.manipulation_mode_service_callback)
 
         self.switch_to_navigation_mode_service = rospy.Service('/switch_to_navigation_mode',
                                                                Trigger,
@@ -441,10 +449,6 @@ class StretchBodyNode:
         self.stop_the_robot_service = rospy.Service('/stop_the_robot',
                                                     Trigger,
                                                     self.stop_the_robot_callback)
-
-        self.calibrate_the_robot_service = rospy.Service('/calibrate_the_robot',
-                                                         Trigger,
-                                                         self.calibrate_callback)
 
         self.runstop_service = rospy.Service('/runstop',
                                               SetBool,

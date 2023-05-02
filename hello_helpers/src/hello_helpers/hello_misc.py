@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+from __future__ import print_function
 
 import time
 import os
@@ -75,7 +77,7 @@ class HelloNode:
     def point_cloud_callback(self, point_cloud):
         self.point_cloud = point_cloud
     
-    def move_to_pose(self, pose, return_before_done=False, custom_contact_thresholds=False):
+    def move_to_pose(self, pose, async=False, custom_contact_thresholds=False):
         joint_names = [key for key in pose]
         point = JointTrajectoryPoint()
         point.time_from_start = rospy.Duration(0.0)
@@ -99,7 +101,7 @@ class HelloNode:
             trajectory_goal.trajectory.points = [point]
         trajectory_goal.trajectory.header.stamp = rospy.Time.now()
         self.trajectory_client.send_goal(trajectory_goal)
-        if not return_before_done: 
+        if not async: 
             self.trajectory_client.wait_for_result()
             #print('Received the following result:')
             #print(self.trajectory_client.get_result())
@@ -120,12 +122,9 @@ class HelloNode:
         # Query TF2 to obtain the current estimated transformation
         # from the robot's base_link frame to the frame.
         robot_to_odom_mat, timestamp = get_p1_to_p2_matrix('base_link', floor_frame, self.tf2_buffer)
-        print('robot_to_odom_mat =', robot_to_odom_mat)
-        print('timestamp =', timestamp)
 
         # Find the robot's current location in the frame.
         r0 = np.array([0.0, 0.0, 0.0, 1.0])
-        print('r0 =', r0)
         r0 = np.matmul(robot_to_odom_mat, r0)[:2]
 
         # Find the current angle of the robot in the frame.

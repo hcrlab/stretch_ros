@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+from __future__ import print_function
 
 from sensor_msgs.msg import JointState
 from geometry_msgs.msg import Twist
@@ -562,8 +564,9 @@ class CollectHeadCalibrationDataNode:
         else:
             filename = self.calibration_directory + 'head_calibration_data_' + capture_date + '.yaml'
         rospy.loginfo('Saving calibration_data to a YAML file named {0}'.format(filename))
-        with open (filename, 'w') as fid:
-            yaml.dump(calibration_data, fid)
+        fid = open(filename, 'w')
+        yaml.dump(calibration_data, fid)
+        fid.close()
         rospy.loginfo('')
         rospy.loginfo('*************************************')
         rospy.loginfo('')
@@ -617,8 +620,9 @@ class CollectHeadCalibrationDataNode:
         filename = rospy.get_param('~controller_calibration_file')
 
         rospy.loginfo('Loading factory default tilt backlash transition angle from the YAML file named {0}'.format(filename))
-        with open(filename, 'r') as fid:
-            controller_parameters = yaml.load(fid, Loader=yaml.FullLoader)
+        fid = open(filename, 'r')
+        controller_parameters = yaml.load(fid)
+        fid.close()
         self.tilt_angle_backlash_transition_rad = controller_parameters['tilt_angle_backlash_transition']
         deg_per_rad = 180.0/math.pi
         rospy.loginfo('self.tilt_angle_backlash_transition_rad in degrees = {0}'.format(self.tilt_angle_backlash_transition_rad * deg_per_rad))

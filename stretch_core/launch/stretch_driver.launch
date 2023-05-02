@@ -34,14 +34,11 @@
   </node>
 
   <node name="stretch_driver" pkg="stretch_core" type="stretch_driver" output="screen">
-    <param name="rate" type="double" value="25.0"/>
+    <param name="rate" type="double" value="15.0"/>
     <param name="timeout" type="double" value="0.5"/>
     <remap from="cmd_vel" to="/stretch/cmd_vel" />
     <remap from="joint_states" to="/stretch/joint_states" />
     <param name="controller_calibration_file" type="string" value="$(arg calibrated_controller_yaml_file)"/>
   </node>
-
-  <node name="aggregator_node" pkg="diagnostic_aggregator" type="aggregator_node">
-    <rosparam command="load" file="$(find stretch_core)/config/diagnostics.yaml" />
-  </node>
+  
 </launch>

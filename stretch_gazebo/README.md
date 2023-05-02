@@ -31,12 +31,14 @@ These set up instructions will not be required on newly shipped robots. Follow t
 ```bash
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
-git clone https://github.com/hello-robot/stretch_ros -b dev/noetic
+git clone https://github.com/hello-robot/stretch_ros
 git clone https://github.com/pal-robotics/realsense_gazebo_plugin
 cd ~/catkin_ws
 rosdep install --from-paths src --ignore-src -r -y
 catkin_make
 ```
+
+In order to use the built packages, make the packages discoverable by sourcing the ROS workspace: `source ~/catkin_ws/devel/setup.bash`. It is popular to add the sourcing command to your `~/.bashrc` file, so that the ROS packages are discoverable in every new terminal that is opened.
 
 ## Running Demo
 

@@ -36,7 +36,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.0350" length="0.0195" />
+        <mesh
+          filename="package://stretch_description/meshes/laser.STL" />
       </geometry>
     </collision>
   </link>

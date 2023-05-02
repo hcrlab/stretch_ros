@@ -1,4 +1,5 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python
+from __future__ import print_function
 
 import importlib
 
@@ -92,7 +93,8 @@ class JointTrajectoryAction:
             rospy.logdebug(("{0} joint_traj action: "
                             "target point #{1} = <{2}>").format(self.node.node_name, pointi, point))
 
-            valid_goals = [c.set_goal(point, self.invalid_goal_callback, self.node.fail_out_of_range_goal)
+            valid_goals = [c.set_goal(point, self.invalid_goal_callback, self.node.fail_out_of_range_goal,
+                                      manipulation_origin=self.node.mobile_base_manipulation_origin)
                            for c in self.command_groups]
             if not all(valid_goals):
                 # At least one of the goals violated the requirements

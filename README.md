@@ -1,23 +1,11 @@
 ![](./images/banner.png)
 
-## ROS Noetic Development Branch
+# Overview
 
-This is a development branch that we are using to port *stretch_ros* to ROS Noetic, Python 3, and Ubuntu 20.04. We plan to begin shipping this version preinstalled on Stretch RE1 robots at the end of the summer of 2021. It is in a usable state, but has known limitations that we've listed below. It is also unstable, since we are actively conducting development in this branch. Since we have performed limited testing, you may encounter unexpected behaviors. Also, installation **requires Ubuntu 20.04 on a second partition** of your robot's hard drive. 
+The *stretch_ros* repository holds ROS related code for the Stretch RE1 mobile manipulator from Hello Robot Inc. 
+For an overview of the capabilities in this repository, we recommend you look at the [following forum post](https://forum.hello-robot.com/t/autonomy-video-details).
 
-We are beginning to use this port internally at Hello Robot to test it, improve it, and add new capabilities. We also anticipate that some customers will begin working with this development branch. If you wish to try it, please see the [installation guide](install_noetic.md). **Both this branch and the installation guide are under active development. Please proceed with caution.**
-
-**Please file issues here and ask general questions on the [forum](https://forum.hello-robot.com)**.
-
-## Known Issues
-
- - The deep perception demos won't work with a default installation, since they require OpenCV compiled with OpenVINO.
- - There is no support for the Respeaker Microphone Array.
-
----
-
-## Directories
-
-The *stretch_ros* repository holds ROS related code for the Stretch RE1 mobile manipulator from Hello Robot Inc. For an overview of the capabilities in this repository, we recommend you look at the following forum post: https://forum.hello-robot.com/t/autonomy-video-details
+**Please be aware that the code in this repository is currently under heavy development.** 
 
 
 | Resource                                                     | Description                                                  |
@@ -32,8 +20,25 @@ The *stretch_ros* repository holds ROS related code for the Stretch RE1 mobile m
 [stretch_gazebo](stretch_gazebo/README.md) | Support for simulation of Stretch in the Gazebo simulator
 [stretch_moveit_config](stretch_gazebo/README.md) | Config files to use Stretch with the MoveIt Motion Planning Framework
 [stretch_navigation](stretch_navigation/README.md) | Support for the ROS navigation stack, including move_base, gmapping, and AMCL
-[stretch_octomap](stretch_octomap/README.md) | Support for mapping using OctoMap: efficient probabilistic 3D Mapping based on Octrees
-[stretch_rtabmap](stretch_rtabmap/README.md) | Support for mapping using Real-Time Appearance-Based Mapping (RTAB-Map)
+
+
+
+## Code Status & Development Plans
+
+We intend for the following high-level summary to provide guidance about the current state of the code and planned development activities.
+
+Directory | Testing Status | Notes 
+--- | --- | ---
+hello_helpers | GOOD |
+stretch_calibration | GOOD |
+stretch_core | GOOD | 
+stretch_deep_perception | GOOD |
+stretch_demos | FAIR | 
+stretch_description | GOOD |
+stretch_funmap | FAIR | 
+stretch_gazebo | FAIR | differs from stretch_core in its underlying controllers
+stretch_moveit_config | FAIR | does not support mobile base planning in ROS 1
+stretch_navigation | GOOD |
 
 ## Licenses
 
@@ -53,5 +58,4 @@ stretch_funmap | [LGPLv3](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 stretch_gazebo | [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 stretch_moveit_config | [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 stretch_navigation | [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-stretch_octomap | [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-stretch_rtabmap | [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+

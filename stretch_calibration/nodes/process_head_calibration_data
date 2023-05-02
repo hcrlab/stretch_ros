@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+from __future__ import print_function
 
 import calibration as ca
 
@@ -215,8 +217,9 @@ class HeadCalibrator:
         most_recent_filename = filenames[-1]
         self.head_calibration_data_filename = most_recent_filename
         print('Loading most recent head calibration data from a YAML file named ' + self.head_calibration_data_filename)
-        with open(self.head_calibration_data_filename, 'r') as fid:
-            self.data = yaml.load(fid, Loader=yaml.FullLoader)
+        fid = open(self.head_calibration_data_filename, 'r')
+        self.data = yaml.load(fid)
+        fid.close()
 
         # Convert data in yaml file from readable text to full joint
         # state representation and ROS Poses
@@ -617,6 +620,7 @@ class HeadCalibrator:
             pan_backlash_correction = 0.0
             
         if backlash_state['joint_head_tilt_looking_up']:
+            #tilt_backlash_correction = -math.pi/18.0 # 10 deg test
             tilt_backlash_correction = self.tilt_looking_up_offset
         else:
             tilt_backlash_correction = 0.0
@@ -772,8 +776,9 @@ class HeadCalibrator:
         urdf_string = self.new_urdf.to_xml_string()
         filename = self.calibration_directory + 'head_calibrated_' + time_string + '.urdf'
         print('Saving new URDF file to ', filename)
-        with open(filename, 'w') as fid:
-            fid.write(urdf_string)
+        fid = open(filename, 'w')
+        fid.write(urdf_string)
+        fid.close()
         print('Finished saving')
 
         
@@ -784,15 +789,16 @@ class HeadCalibrator:
         controller_parameters = self.get_controller_parameters()
         
         no_numpy_controller_parameters = {}
-        for key, entry in controller_parameters.items():
+        for key, entry in controller_parameters.viewitems():
             if "tolist" in dir(entry):
                 entry = entry.tolist()
             no_numpy_controller_parameters[key] = entry
 
         filename = self.calibration_directory + 'controller_calibration_head_' + time_string + '.yaml'
         print('Saving controller calibration head parameters to a YAML file named ', filename)
-        with open(filename, 'w') as fid:
-            yaml.dump(no_numpy_controller_parameters, fid)
+        fid = open(filename, 'w')
+        yaml.dump(no_numpy_controller_parameters, fid)
+        fid.close()
         print('Finished saving.')
 
         
@@ -845,8 +851,9 @@ class ProcessHeadCalibrationDataNode:
         # load default tilt backlash transition angle
         self.uncalibrated_controller_calibration_filename = rospy.get_param('~uncalibrated_controller_calibration_filename')
         rospy.loginfo('Loading factory default tilt backlash transition angle from the YAML file named {0}'.format(self.uncalibrated_controller_calibration_filename))
-        with open(self.uncalibrated_controller_calibration_filename, 'r') as fid:
-            default_controller_parameters = yaml.load(fid, Loader=yaml.FullLoader)
+        fid = open(self.uncalibrated_controller_calibration_filename, 'r')
+        default_controller_parameters = yaml.load(fid)
+        fid.close()
         tilt_angle_backlash_transition_rad = default_controller_parameters['tilt_angle_backlash_transition']
         deg_per_rad = 180.0/math.pi
         rospy.loginfo('self.tilt_angle_backlash_transition_rad in degrees = {0}'.format(tilt_angle_backlash_transition_rad * deg_per_rad))
@@ -863,8 +870,9 @@ class ProcessHeadCalibrationDataNode:
             else:
                 filename = self.opt_results_file_to_load
                 print('Loading CMA-ES result from a YAML file named ' + filename)
-            with open(filename, 'r') as fid:
-                cma_result = yaml.load(fid, Loader=yaml.FullLoader)
+            fid = open(filename, 'r')
+            cma_result = yaml.load(fid)
+            fid.close()
 
             show_data_used_during_optimization = True
             if show_data_used_during_optimization: 
@@ -965,7 +973,6 @@ class ProcessHeadCalibrationDataNode:
                 
             cma_result = {
                 'calibration_time_in_minutes': calibration_time_in_minutes,
-                'tilt_angle_backlash_transition': self.calibrator.tilt_angle_backlash_transition_rad,
                 'initial_solution': initial_solution,
                 'initial_standard_deviation': initial_standard_deviation,
                 'options': options,
@@ -999,8 +1006,9 @@ class ProcessHeadCalibrationDataNode:
                 print('********************************************************')
                 filename = self.calibration_directory + 'head_calibration_result_' + time_string + '.yaml'
                 print('Saving CMA-ES result to a YAML file named ', filename)
-                with open(filename, 'w') as fid:
-                    yaml.dump(cma_result, fid)
+                fid = open(filename, 'w')
+                yaml.dump(cma_result, fid)
+                fid.close()
                 print('Finished saving.')
 
                 fit_parameters = cma_result['best_parameters']
